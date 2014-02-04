@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
@@ -22,12 +23,13 @@ import javafx.stage.Stage;
 public class Main extends Application {
 
 	private String[] movies;
+	private ArrayList<Movie> myMovies = new ArrayList<>();
 	private int SCREEN_WIDTH = 1200;
 	private int SCREEN_HEIGHT = 700;
 	private int SELECTED_YEAR;
 	private Group root;
 	private ToolBar toolbar;
-	
+
 	private Color ACTION_COLOR = Color.web("D94214");
 	private Color ANIMATION_COLOR = Color.web("FFF2C1");
 	private Color COMEDY_COLOR = Color.web("80A894");
@@ -35,11 +37,19 @@ public class Main extends Application {
 	private Color DOCUMENTARY_COLOR = Color.web("03658C");
 	private Color ROMANCE_COLOR = Color.web("D94D3F");
 	private Color SHORT_COLOR = Color.web("1E1E1F");
-	private Color DEFAULT_COLOR = Color.GREY;
 
 	@Override
 	public void start(Stage stage) throws Exception {
 		// TODO Auto-generated method stub
+
+		read();
+		for (Movie m:myMovies) {
+			System.out.println("Title: "+m.getTitle());
+			System.out.println("Year: " + m.getYear());
+			System.out.println("Rating: " + m.getRating());
+			System.out.println("Genre: " + m.getGenre());
+			System.out.println("Color: " + m.getColor());
+		}
 
 		root = new Group();
 		toolbar = new ToolBar();
@@ -63,32 +73,32 @@ public class Main extends Application {
 				SELECTED_YEAR = (int) Math.floor((Double) arg0.getValue());
 				yearLabel.setText("Year: " + SELECTED_YEAR);
 				System.out.println(SELECTED_YEAR);
-				draw(SELECTED_YEAR);
 			}
 		});
-		
+
 		ToggleButton action = new ToggleButton("Action");
 		action.setStyle("-fx-base: #D94214;");
-		
+
 		ToggleButton animation = new ToggleButton("Animation");
 		animation.setStyle("-fx-base: #FFF2C1;");
-		
+
 		ToggleButton comedy = new ToggleButton("Comedy");
 		comedy.setStyle("-fx-base: #80A894;");
-		
+
 		ToggleButton drama = new ToggleButton("Drama");
 		drama.setStyle("-fx-base: #093844;");
-		
+
 		ToggleButton documentary = new ToggleButton("Documentary");
 		documentary.setStyle("-fx-base: #03658C;");
-		
+
 		ToggleButton romance = new ToggleButton("Romance");
 		romance.setStyle("-fx-base: #D94D3F;");
-		
+
 		ToggleButton shortFilm = new ToggleButton("Short");
 		shortFilm.setStyle("-fx-base: #1E1E1F;");
 
-		toolbar.getItems().addAll(yearSlider, yearLabel, action, animation, comedy, drama, documentary, romance, shortFilm);
+		toolbar.getItems().addAll(yearSlider, yearLabel, action, animation,
+				comedy, drama, documentary, romance, shortFilm);
 
 		root.getChildren().add(toolbar);
 
@@ -99,6 +109,61 @@ public class Main extends Application {
 
 	public static void main(String[] args) {
 		launch(args);
+	}
+
+	public void read() {
+		String csvFile = "movies.csv";
+		BufferedReader br = null;
+		String line = "";
+		String cvsSplitBy = ",";
+
+		try {
+
+			br = new BufferedReader(new FileReader(csvFile));
+			while ((line = br.readLine()) != null) {
+
+				// use comma as separator
+				movies = line.split(cvsSplitBy);
+
+				// create a movie object for every movie read
+				if (movies[18].equalsIgnoreCase("1")) {
+					myMovies.add(new Movie(movies[1], movies[2], movies[3],
+							movies[4], "Action"));
+				} else if (movies[19].equalsIgnoreCase("1")) {
+					myMovies.add(new Movie(movies[1], movies[2], movies[3],
+							movies[4], "Animation"));
+				} else if (movies[20].equalsIgnoreCase("1")) {
+					myMovies.add(new Movie(movies[1], movies[2], movies[3],
+							movies[4], "Comedy"));
+				} else if (movies[21].equalsIgnoreCase("1")) {
+					myMovies.add(new Movie(movies[1], movies[2], movies[3],
+							movies[4], "Drama"));
+				} else if (movies[22].equalsIgnoreCase("1")) {
+					myMovies.add(new Movie(movies[1], movies[2], movies[3],
+							movies[4], "Documentary"));
+				} else if (movies[23].equalsIgnoreCase("1")) {
+					myMovies.add(new Movie(movies[1], movies[2], movies[3],
+							movies[4], "Romance"));
+				} else {
+					myMovies.add(new Movie(movies[1], movies[2], movies[3],
+							movies[5], "Short"));
+				}
+			}
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (br != null) {
+				try {
+					br.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		System.out.println("Done");
 	}
 
 	public void draw(int year) {
@@ -121,6 +186,31 @@ public class Main extends Application {
 				// System.out.println("Length: " + movies[3] + "mn");
 				// System.out.println("IMDB Rating: " + movies[5]);
 				// System.out.println("+++++++++++++++++++++");
+				// Circle mov = new Circle();
+
+				// if (movies[18].equalsIgnoreCase("1")) {
+				// myMovies.add(new Movie(movies[1], movies[2], movies[3],
+				// movies[5], "Action"));
+				// } else if (movies[19].equalsIgnoreCase("1")) {
+				// myMovies.add(new Movie(movies[1], movies[2], movies[3],
+				// movies[5], "Animation"));
+				// } else if (movies[20].equalsIgnoreCase("1")) {
+				// myMovies.add(new Movie(movies[1], movies[2], movies[3],
+				// movies[5], "Comedy"));
+				// } else if (movies[21].equalsIgnoreCase("1")) {
+				// myMovies.add(new Movie(movies[1], movies[2], movies[3],
+				// movies[5], "Drama"));
+				// } else if (movies[22].equalsIgnoreCase("1")) {
+				// myMovies.add(new Movie(movies[1], movies[2], movies[3],
+				// movies[5], "Documentary"));
+				// } else if (movies[23].equalsIgnoreCase("1")) {
+				// myMovies.add(new Movie(movies[1], movies[2], movies[3],
+				// movies[5], "Romance"));
+				// } else {
+				// myMovies.add(new Movie(movies[1], movies[2], movies[3],
+				// movies[5], "Short"));
+				// }
+
 				Circle mov = new Circle();
 				if (isInteger(movies[2]) && Integer.parseInt(movies[2]) == year) {
 					if (isInteger(movies[5])) {
@@ -136,13 +226,11 @@ public class Main extends Application {
 							mov = createCircle(DOCUMENTARY_COLOR);
 						} else if (movies[23].equalsIgnoreCase("1")) {
 							mov = createCircle(ROMANCE_COLOR);
-//						} else if (movies[24] == "1" && movies[24] != null) {
-//							mov = createCircle(SHORT_COLOR);
 						} else {
-							mov = createCircle(DEFAULT_COLOR );
+							mov = createCircle(SHORT_COLOR);
 						}
-					} 
-					
+					}
+
 					mov.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
 						@Override
@@ -170,18 +258,18 @@ public class Main extends Application {
 		}
 		System.out.println("Done");
 	}
-	
-	public void reset(){
+
+	public void reset() {
 		root.getChildren().clear();
 		root.getChildren().add(toolbar);
 	}
-	
-	public Circle createCircle(Color col){
+
+	public Circle createCircle(Color col) {
 		Circle mov = CircleBuilder.create()
 				.centerX(Math.random() * SCREEN_WIDTH)
 				.centerY(Math.random() * SCREEN_HEIGHT + 25)
-				.radius(Double.parseDouble(movies[5])/2000).fill(col).opacity(0.8)
-				.build();
+				.radius(Double.parseDouble(movies[4])).fill(col)
+				.opacity(0.8).build();
 		return mov;
 	}
 
