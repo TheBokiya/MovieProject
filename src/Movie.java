@@ -3,18 +3,21 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.CircleBuilder;
 
 public class Movie {
+	private int SCREEN_WIDTH = 1200;
+	private int SCREEN_HEIGHT = 700;
+
 	private String title, genre;
 	private int year, length;
 	private double rating;
 	private Color color;
-	
+
 	private Color ACTION_COLOR = Color.web("D94214");
 	private Color ANIMATION_COLOR = Color.web("FFF2C1");
 	private Color COMEDY_COLOR = Color.web("80A894");
 	private Color DRAMA_COLOR = Color.web("093844");
 	private Color DOCUMENTARY_COLOR = Color.web("03658C");
 	private Color ROMANCE_COLOR = Color.web("D94D3F");
-	private Color SHORT_COLOR = Color.web("1E1E1F");
+	private Color SHORT_COLOR = Color.web("52616D");
 
 	public Movie(String title, String year, String length, String rating,
 			String genre) {
@@ -31,7 +34,7 @@ public class Movie {
 			}
 		}
 		this.genre = genre;
-		
+
 		switch (genre) {
 		case "Action":
 			this.color = ACTION_COLOR;
@@ -57,8 +60,27 @@ public class Movie {
 		}
 	}
 
-	public Circle createCircle(){
-		return null;
+	public Circle createCircle() {
+		Circle mov = CircleBuilder
+				.create()
+				.centerX(Math.random() * SCREEN_WIDTH)
+				.centerY(
+						50 + (int) (Math.random() * ((SCREEN_HEIGHT - 50) + 1)))
+				.radius(rating * 1.5).fill(color).opacity(0.8).build();
+		return mov;
+	}
+
+	public Circle createCircle(int year) {
+		Circle mov = new Circle();
+		if (this.year == year) {
+			mov = CircleBuilder
+					.create()
+					.centerX(Math.random() * SCREEN_WIDTH)
+					.centerY(
+							50 + (int) (Math.random() * ((SCREEN_HEIGHT - 50) + 1)))
+					.radius(rating * 1.5).fill(color).opacity(0.8).build();
+		}
+		return mov;
 	}
 
 	public static boolean isInteger(String s) {
@@ -100,7 +122,7 @@ public class Movie {
 	public double getRating() {
 		return rating;
 	}
-	
+
 	public Color getColor() {
 		return color;
 	}
