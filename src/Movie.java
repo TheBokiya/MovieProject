@@ -11,6 +11,8 @@ public class Movie {
 	private double rating;
 	private Color color;
 
+	private double multiplier = 2.0;
+
 	private Color ACTION_COLOR = Color.web("D94214");
 	private Color ANIMATION_COLOR = Color.web("FFF2C1");
 	private Color COMEDY_COLOR = Color.web("80A894");
@@ -66,7 +68,23 @@ public class Movie {
 				.centerX(Math.random() * SCREEN_WIDTH)
 				.centerY(
 						50 + (int) (Math.random() * ((SCREEN_HEIGHT - 50) + 1)))
-				.radius(rating * 1.5).fill(color).opacity(0.8).build();
+				.radius(rating * multiplier).fill(color).opacity(0.8).build();
+		return mov;
+	}
+
+	public Circle createCircle(int year, String genre) {
+		Circle mov = new Circle();
+		if (this.year == year) {
+			if (this.genre.equalsIgnoreCase(genre)) {
+				mov = CircleBuilder
+						.create()
+						.centerX(Math.random() * SCREEN_WIDTH)
+						.centerY(
+								50 + (int) (Math.random() * ((SCREEN_HEIGHT - 50) + 1)))
+						.radius(rating * multiplier).fill(color).opacity(0.8)
+						.build();
+			}
+		}
 		return mov;
 	}
 
@@ -78,7 +96,9 @@ public class Movie {
 					.centerX(Math.random() * SCREEN_WIDTH)
 					.centerY(
 							50 + (int) (Math.random() * ((SCREEN_HEIGHT - 50) + 1)))
-					.radius(rating * 1.5).fill(color).opacity(0.8).build();
+					.radius(rating * multiplier).fill(color).opacity(0.8)
+					.build();
+
 		}
 		return mov;
 	}

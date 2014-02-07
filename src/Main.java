@@ -18,14 +18,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.ToolBar;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.CircleBuilder;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.RectangleBuilder;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -35,7 +34,10 @@ public class Main extends Application {
 	private ArrayList<Movie> myMovies = new ArrayList<>();
 	private int SCREEN_WIDTH = 1200;
 	private int SCREEN_HEIGHT = 700;
+
 	private int SELECTED_YEAR;
+	private String SELECTED_GENRE;
+
 	private Group root;
 	private ToolBar toolbar;
 
@@ -44,13 +46,14 @@ public class Main extends Application {
 		// TODO Auto-generated method stub
 
 		read();
-		
+
 		root = new Group();
 		toolbar = new ToolBar();
 		toolbar.setMinWidth(SCREEN_WIDTH);
 		toolbar.prefHeight(50);
 
 		SELECTED_YEAR = 1995;
+		SELECTED_GENRE = "NA";
 
 		final Label yearLabel = new Label();
 		yearLabel.setText("Year: " + SELECTED_YEAR);
@@ -99,40 +102,76 @@ public class Main extends Application {
 
 		Separator separator2 = new Separator(Orientation.VERTICAL);
 
-		ToggleButton action = new ToggleButton("Action");
+		final ToggleGroup toggleGroup = new ToggleGroup();
+
+		final ToggleButton action = new ToggleButton("Action");
+		action.setId("001");
+		action.setToggleGroup(toggleGroup);
 		action.setStyle("-fx-base: #D94214;");
-		action.selectedProperty().addListener(new ChangeListener<Boolean>() {
 
-			@Override
-			public void changed(ObservableValue<? extends Boolean> arg0,
-					Boolean arg1, Boolean arg2) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
-
-		ToggleButton animation = new ToggleButton("Animation");
+		final ToggleButton animation = new ToggleButton("Animation");
+		animation.setToggleGroup(toggleGroup);
 		animation.setStyle("-fx-base: #FFF2C1;");
 
-		ToggleButton comedy = new ToggleButton("Comedy");
+		final ToggleButton comedy = new ToggleButton("Comedy");
+		comedy.setToggleGroup(toggleGroup);
 		comedy.setStyle("-fx-base: #80A894;");
 
-		ToggleButton drama = new ToggleButton("Drama");
+		final ToggleButton drama = new ToggleButton("Drama");
+		drama.setToggleGroup(toggleGroup);
 		drama.setStyle("-fx-base: #36175E;");
 
-		ToggleButton documentary = new ToggleButton("Documentary");
+		final ToggleButton documentary = new ToggleButton("Documentary");
+		documentary.setToggleGroup(toggleGroup);
 		documentary.setStyle("-fx-base: #03658C;");
 
-		ToggleButton romance = new ToggleButton("Romance");
+		final ToggleButton romance = new ToggleButton("Romance");
+		romance.setToggleGroup(toggleGroup);
 		romance.setStyle("-fx-base: #D982AB;");
 
-		ToggleButton shortFilm = new ToggleButton("Short");
+		final ToggleButton shortFilm = new ToggleButton("Short");
+		shortFilm.setToggleGroup(toggleGroup);
 		shortFilm.setStyle("-fx-base: #52616D;");
-		
+
+		toggleGroup.selectedToggleProperty().addListener(
+				new ChangeListener<Toggle>() {
+
+					@Override
+					public void changed(ObservableValue<? extends Toggle> arg0,
+							Toggle arg1, Toggle arg2) {
+						// TODO Auto-generated method stub
+						reset();
+						if (!action.isSelected() && !animation.isSelected()
+								&& !comedy.isSelected() && !drama.isSelected()
+								&& !documentary.isSelected()
+								&& !romance.isSelected()
+								&& !shortFilm.isSelected()) {
+							SELECTED_GENRE = "NA";
+							reset();
+							draw();
+						}
+						if (action.isSelected())
+							SELECTED_GENRE = "Action";
+						else if (animation.isSelected())
+							SELECTED_GENRE = "Animation";
+						else if (comedy.isSelected())
+							SELECTED_GENRE = "Comedy";
+						else if (drama.isSelected())
+							SELECTED_GENRE = "Drama";
+						else if (documentary.isSelected())
+							SELECTED_GENRE = "Documentary";
+						else if (romance.isSelected())
+							SELECTED_GENRE = "Romance";
+						else if (shortFilm.isSelected())
+							SELECTED_GENRE = "Short";
+						drawWithGenre();
+					}
+				});
+
 		Separator separator3 = new Separator(Orientation.VERTICAL);
-		
+
 		Label searchLabel = new Label("Search:");
-		
+
 		TextField searchField = new TextField();
 
 		toolbar.getItems().addAll(yearLabel, yearSlider, separator1, showAll,
@@ -140,7 +179,7 @@ public class Main extends Application {
 				romance, shortFilm, separator3, searchLabel, searchField);
 
 		root.getChildren().add(toolbar);
-		
+
 		Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT + 25);
 		scene.getStylesheets().add("stylesheet.css");
 
@@ -290,24 +329,24 @@ public class Main extends Application {
 		}
 	}
 
-	public void draw() {
+	public void drawWithGenre() {
 		for (final Movie m : myMovies) {
-			final Circle circle = m.createCircle(SELECTED_YEAR);
+			final Circle circle = m.createCircle(SELECTED_YEAR, SELECTED_GENRE);
 			circle.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
 				@Override
 				public void handle(MouseEvent arg0) {
 					// TODO Auto-generated method stub
 					System.out.println("Title: " + m.getTitle());
-					Rectangle infoBox = RectangleBuilder.create()
-							.x(circle.getCenterX()+circle.getRadius()/2+10)
-							.y(circle.getCenterY()-circle.getRadius()/2)
-							.width(100)
-							.height(100)
-							.fill(Color.BLACK)
-							.opacity(0.3)
-							.build();
-					root.getChildren().add(infoBox);
+					// Rectangle infoBox = RectangleBuilder.create()
+					// .x(circle.getCenterX()+circle.getRadius()/2+10)
+					// .y(circle.getCenterY()-circle.getRadius()/2)
+					// .width(100)
+					// .height(100)
+					// .fill(Color.BLACK)
+					// .opacity(0.3)
+					// .build();
+					// root.getChildren().add(infoBox);
 				}
 			});
 
@@ -342,13 +381,56 @@ public class Main extends Application {
 		}
 	}
 
-	public Circle createCircle(Color col) {
-		Circle mov = CircleBuilder.create()
-				.centerX(Math.random() * SCREEN_WIDTH)
-				.centerY(Math.random() * SCREEN_HEIGHT + 25)
-				.radius(Double.parseDouble(movies[4])).fill(col).opacity(0.8)
-				.build();
-		return mov;
+	public void draw() {
+		for (final Movie m : myMovies) {
+			final Circle circle = m.createCircle(SELECTED_YEAR);
+			circle.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+				@Override
+				public void handle(MouseEvent arg0) {
+					// TODO Auto-generated method stub
+					System.out.println("Title: " + m.getTitle());
+					// Rectangle infoBox = RectangleBuilder.create()
+					// .x(circle.getCenterX()+circle.getRadius()/2+10)
+					// .y(circle.getCenterY()-circle.getRadius()/2)
+					// .width(100)
+					// .height(100)
+					// .fill(Color.BLACK)
+					// .opacity(0.3)
+					// .build();
+					// root.getChildren().add(infoBox);
+				}
+			});
+
+			circle.setOnMouseDragged(new EventHandler<MouseEvent>() {
+
+				@Override
+				public void handle(MouseEvent arg0) {
+					// TODO Auto-generated method stub
+					circle.setCenterX(arg0.getX());
+					circle.setCenterY(arg0.getY());
+				}
+			});
+
+			circle.setOnMouseEntered(new EventHandler<MouseEvent>() {
+
+				@Override
+				public void handle(MouseEvent arg0) {
+					// TODO Auto-generated method stub
+					transition(circle);
+				}
+			});
+
+			circle.setOnMouseExited(new EventHandler<MouseEvent>() {
+
+				@Override
+				public void handle(MouseEvent arg0) {
+					// TODO Auto-generated method stub
+					reverseTransition(circle);
+				}
+			});
+			root.getChildren().add(circle);
+		}
 	}
 
 	public static boolean isInteger(String s) {
