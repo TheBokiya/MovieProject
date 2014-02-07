@@ -14,9 +14,9 @@ public class Movie {
 	private Color ACTION_COLOR = Color.web("D94214");
 	private Color ANIMATION_COLOR = Color.web("FFF2C1");
 	private Color COMEDY_COLOR = Color.web("80A894");
-	private Color DRAMA_COLOR = Color.web("093844");
+	private Color DRAMA_COLOR = Color.web("36175E");
 	private Color DOCUMENTARY_COLOR = Color.web("03658C");
-	private Color ROMANCE_COLOR = Color.web("D94D3F");
+	private Color ROMANCE_COLOR = Color.web("D982AB");
 	private Color SHORT_COLOR = Color.web("52616D");
 
 	public Movie(String title, String year, String length, String rating,

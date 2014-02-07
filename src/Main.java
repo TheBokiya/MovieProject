@@ -17,12 +17,15 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToolBar;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.CircleBuilder;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.RectangleBuilder;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -41,7 +44,7 @@ public class Main extends Application {
 		// TODO Auto-generated method stub
 
 		read();
-
+		
 		root = new Group();
 		toolbar = new ToolBar();
 		toolbar.setMinWidth(SCREEN_WIDTH);
@@ -98,6 +101,15 @@ public class Main extends Application {
 
 		ToggleButton action = new ToggleButton("Action");
 		action.setStyle("-fx-base: #D94214;");
+		action.selectedProperty().addListener(new ChangeListener<Boolean>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Boolean> arg0,
+					Boolean arg1, Boolean arg2) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 
 		ToggleButton animation = new ToggleButton("Animation");
 		animation.setStyle("-fx-base: #FFF2C1;");
@@ -106,25 +118,34 @@ public class Main extends Application {
 		comedy.setStyle("-fx-base: #80A894;");
 
 		ToggleButton drama = new ToggleButton("Drama");
-		drama.setStyle("-fx-base: #093844;");
+		drama.setStyle("-fx-base: #36175E;");
 
 		ToggleButton documentary = new ToggleButton("Documentary");
 		documentary.setStyle("-fx-base: #03658C;");
 
 		ToggleButton romance = new ToggleButton("Romance");
-		romance.setStyle("-fx-base: #D94D3F;");
+		romance.setStyle("-fx-base: #D982AB;");
 
 		ToggleButton shortFilm = new ToggleButton("Short");
 		shortFilm.setStyle("-fx-base: #52616D;");
+		
+		Separator separator3 = new Separator(Orientation.VERTICAL);
+		
+		Label searchLabel = new Label("Search:");
+		
+		TextField searchField = new TextField();
 
 		toolbar.getItems().addAll(yearLabel, yearSlider, separator1, showAll,
 				separator2, action, animation, comedy, drama, documentary,
-				romance, shortFilm);
+				romance, shortFilm, separator3, searchLabel, searchField);
 
 		root.getChildren().add(toolbar);
+		
+		Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT + 25);
+		scene.getStylesheets().add("stylesheet.css");
 
 		stage.setTitle("Project Sloth");
-		stage.setScene(new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT + 25));
+		stage.setScene(scene);
 		stage.show();
 	}
 
@@ -199,14 +220,16 @@ public class Main extends Application {
 		ft.setAutoReverse(false);
 
 		ft.play();
-		
-		 StrokeTransition st = new StrokeTransition(Duration.millis(500), c, Color.WHITE, (Color) c.getFill());
-	     st.setCycleCount(1);
-	     st.setAutoReverse(false);
-	 
-	     st.play();
+
+		StrokeTransition st = new StrokeTransition(Duration.millis(500), c,
+				Color.WHITE, (Color) c.getFill());
+		st.setCycleCount(1);
+		st.setAutoReverse(false);
+
+		st.play();
+
 	}
-	
+
 	public void reverseTransition(Circle c) {
 		FillTransition ft = new FillTransition(Duration.millis(500), c,
 				(Color) c.getFill(), (Color) c.getStroke());
@@ -214,14 +237,16 @@ public class Main extends Application {
 		ft.setAutoReverse(false);
 
 		ft.play();
-		
-		 StrokeTransition st = new StrokeTransition(Duration.millis(500), c, (Color) c.getStroke(), null);
-	     st.setCycleCount(1);
-	     st.setAutoReverse(false);
-	 
-	     st.play();
+
+		StrokeTransition st = new StrokeTransition(Duration.millis(500), c,
+				(Color) c.getStroke(), null);
+		st.setCycleCount(1);
+		st.setAutoReverse(false);
+
+		st.play();
+
 	}
-	
+
 	public void drawAll() {
 		for (final Movie m : myMovies) {
 			final Circle circle = m.createCircle();
@@ -252,7 +277,7 @@ public class Main extends Application {
 					transition(circle);
 				}
 			});
-			
+
 			circle.setOnMouseExited(new EventHandler<MouseEvent>() {
 
 				@Override
@@ -264,7 +289,7 @@ public class Main extends Application {
 			root.getChildren().add(circle);
 		}
 	}
-	
+
 	public void draw() {
 		for (final Movie m : myMovies) {
 			final Circle circle = m.createCircle(SELECTED_YEAR);
@@ -274,6 +299,15 @@ public class Main extends Application {
 				public void handle(MouseEvent arg0) {
 					// TODO Auto-generated method stub
 					System.out.println("Title: " + m.getTitle());
+					Rectangle infoBox = RectangleBuilder.create()
+							.x(circle.getCenterX()+circle.getRadius()/2+10)
+							.y(circle.getCenterY()-circle.getRadius()/2)
+							.width(100)
+							.height(100)
+							.fill(Color.BLACK)
+							.opacity(0.3)
+							.build();
+					root.getChildren().add(infoBox);
 				}
 			});
 
@@ -295,7 +329,7 @@ public class Main extends Application {
 					transition(circle);
 				}
 			});
-			
+
 			circle.setOnMouseExited(new EventHandler<MouseEvent>() {
 
 				@Override
