@@ -3,6 +3,8 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.CircleBuilder;
 
 public class Movie {
+	
+	// Variables for the movie object
 	private int SCREEN_WIDTH = 1200;
 	private int SCREEN_HEIGHT = 700;
 
@@ -21,6 +23,7 @@ public class Movie {
 	private Color ROMANCE_COLOR = Color.web("D982AB");
 	private Color SHORT_COLOR = Color.web("52616D");
 
+	// Constructor
 	public Movie(String title, String year, String length, String rating,
 			String genre) {
 		this.title = title;
@@ -62,6 +65,7 @@ public class Movie {
 		}
 	}
 
+	// Draw the circle without year or genre
 	public Circle createCircle() {
 		Circle mov = CircleBuilder
 				.create()
@@ -72,6 +76,7 @@ public class Movie {
 		return mov;
 	}
 
+	// Draw the circle with year and genre
 	public Circle createCircle(int year, String genre) {
 		Circle mov = new Circle();
 		if (this.year == year) {
@@ -88,6 +93,7 @@ public class Movie {
 		return mov;
 	}
 
+	// Create  the circle with year only
 	public Circle createCircle(int year) {
 		Circle mov = new Circle();
 		if (this.year == year) {
@@ -103,6 +109,7 @@ public class Movie {
 		return mov;
 	}
 
+	// Check if it's an integer
 	public static boolean isInteger(String s) {
 		try {
 			Integer.parseInt(s);
@@ -113,6 +120,7 @@ public class Movie {
 		return true;
 	}
 
+	// Check if it's a double
 	public static boolean isDouble(String s) {
 		try {
 			Double.parseDouble(s);
@@ -123,6 +131,7 @@ public class Movie {
 		return true;
 	}
 
+	// Getters
 	public String getTitle() {
 		return title;
 	}

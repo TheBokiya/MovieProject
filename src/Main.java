@@ -17,7 +17,6 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.control.Slider;
-import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
@@ -30,6 +29,7 @@ import javafx.util.Duration;
 
 public class Main extends Application {
 
+	// Initializing variables
 	private String[] movies;
 	private ArrayList<Movie> myMovies = new ArrayList<>();
 	private int SCREEN_WIDTH = 1200;
@@ -40,10 +40,11 @@ public class Main extends Application {
 
 	private Group root;
 	private ToolBar toolbar;
+	private Label title = new Label();
+	private Label rating = new Label();
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		// TODO Auto-generated method stub
 
 		read();
 
@@ -57,6 +58,9 @@ public class Main extends Application {
 
 		final Label yearLabel = new Label();
 		yearLabel.setText("Year: " + SELECTED_YEAR);
+		
+		title = new Label("Title: ");
+		rating = new Label("Rating: ");
 
 		draw();
 
@@ -75,12 +79,18 @@ public class Main extends Application {
 				reset();
 				SELECTED_YEAR = (int) Math.floor((Double) arg0.getValue());
 				yearLabel.setText("Year: " + SELECTED_YEAR);
-				draw();
+				if (SELECTED_GENRE == "NA") {
+					draw();
+				} else {
+					drawWithGenre();
+				}
 			}
 		});
 
 		Separator separator1 = new Separator(Orientation.VERTICAL);
 
+		// Disable the year slider when Show All is checked 
+		// and show all the circles from 1970-2005
 		CheckBox showAll = new CheckBox("Show all");
 		showAll.selectedProperty().addListener(new ChangeListener<Boolean>() {
 
@@ -133,6 +143,7 @@ public class Main extends Application {
 		shortFilm.setToggleGroup(toggleGroup);
 		shortFilm.setStyle("-fx-base: #52616D;");
 
+		// Genre switch
 		toggleGroup.selectedToggleProperty().addListener(
 				new ChangeListener<Toggle>() {
 
@@ -167,16 +178,13 @@ public class Main extends Application {
 						drawWithGenre();
 					}
 				});
-
+		
 		Separator separator3 = new Separator(Orientation.VERTICAL);
-
-		Label searchLabel = new Label("Search:");
-
-		TextField searchField = new TextField();
+		Separator separator4 = new Separator(Orientation.VERTICAL);
 
 		toolbar.getItems().addAll(yearLabel, yearSlider, separator1, showAll,
 				separator2, action, animation, comedy, drama, documentary,
-				romance, shortFilm, separator3, searchLabel, searchField);
+				romance, shortFilm, separator3, title, separator4, rating);
 
 		root.getChildren().add(toolbar);
 
@@ -192,6 +200,7 @@ public class Main extends Application {
 		launch(args);
 	}
 
+	// Read the csv file
 	public void read() {
 		String csvFile = "movies.csv";
 		BufferedReader br = null;
@@ -247,11 +256,13 @@ public class Main extends Application {
 		System.out.println("Done");
 	}
 
+	// Clear the canvas
 	public void reset() {
 		root.getChildren().clear();
 		root.getChildren().add(toolbar);
 	}
 
+	// Animate when mouse is over the circle
 	public void transition(Circle c) {
 		FillTransition ft = new FillTransition(Duration.millis(500), c,
 				(Color) c.getFill(), Color.WHITE);
@@ -269,6 +280,7 @@ public class Main extends Application {
 
 	}
 
+	// Animate when mouse exits the circle
 	public void reverseTransition(Circle c) {
 		FillTransition ft = new FillTransition(Duration.millis(500), c,
 				(Color) c.getFill(), (Color) c.getStroke());
@@ -286,6 +298,7 @@ public class Main extends Application {
 
 	}
 
+	// Draw all the circle from 1970-2005
 	public void drawAll() {
 		for (final Movie m : myMovies) {
 			final Circle circle = m.createCircle();
@@ -294,7 +307,8 @@ public class Main extends Application {
 				@Override
 				public void handle(MouseEvent arg0) {
 					// TODO Auto-generated method stub
-					System.out.println("Title: " + m.getTitle());
+					title.setText("Title: "+m.getTitle());
+					rating.setText("Rating: "+m.getRating());
 				}
 			});
 
@@ -329,6 +343,7 @@ public class Main extends Application {
 		}
 	}
 
+	// Draw the circles for the selected genre and year
 	public void drawWithGenre() {
 		for (final Movie m : myMovies) {
 			final Circle circle = m.createCircle(SELECTED_YEAR, SELECTED_GENRE);
@@ -337,16 +352,8 @@ public class Main extends Application {
 				@Override
 				public void handle(MouseEvent arg0) {
 					// TODO Auto-generated method stub
-					System.out.println("Title: " + m.getTitle());
-					// Rectangle infoBox = RectangleBuilder.create()
-					// .x(circle.getCenterX()+circle.getRadius()/2+10)
-					// .y(circle.getCenterY()-circle.getRadius()/2)
-					// .width(100)
-					// .height(100)
-					// .fill(Color.BLACK)
-					// .opacity(0.3)
-					// .build();
-					// root.getChildren().add(infoBox);
+					title.setText("Title: "+m.getTitle());
+					rating.setText("Rating: "+m.getRating());
 				}
 			});
 
@@ -381,27 +388,23 @@ public class Main extends Application {
 		}
 	}
 
+	// Draw the circles for selected year without any genre selected
 	public void draw() {
 		for (final Movie m : myMovies) {
 			final Circle circle = m.createCircle(SELECTED_YEAR);
+			
+			// Show the title and rating on the toolbar for clicked movie
 			circle.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
 				@Override
 				public void handle(MouseEvent arg0) {
 					// TODO Auto-generated method stub
-					System.out.println("Title: " + m.getTitle());
-					// Rectangle infoBox = RectangleBuilder.create()
-					// .x(circle.getCenterX()+circle.getRadius()/2+10)
-					// .y(circle.getCenterY()-circle.getRadius()/2)
-					// .width(100)
-					// .height(100)
-					// .fill(Color.BLACK)
-					// .opacity(0.3)
-					// .build();
-					// root.getChildren().add(infoBox);
+					title.setText("Title: "+m.getTitle());
+					rating.setText("Rating: "+m.getRating());
 				}
 			});
 
+			// Circles can be clicked and dragged
 			circle.setOnMouseDragged(new EventHandler<MouseEvent>() {
 
 				@Override
@@ -412,6 +415,7 @@ public class Main extends Application {
 				}
 			});
 
+			// Animate when mouse over
 			circle.setOnMouseEntered(new EventHandler<MouseEvent>() {
 
 				@Override
@@ -421,6 +425,7 @@ public class Main extends Application {
 				}
 			});
 
+			// Animate when mouse leaves
 			circle.setOnMouseExited(new EventHandler<MouseEvent>() {
 
 				@Override
@@ -431,15 +436,5 @@ public class Main extends Application {
 			});
 			root.getChildren().add(circle);
 		}
-	}
-
-	public static boolean isInteger(String s) {
-		try {
-			Integer.parseInt(s);
-		} catch (NumberFormatException e) {
-			return false;
-		}
-		// only got here if we didn't return false
-		return true;
 	}
 }
